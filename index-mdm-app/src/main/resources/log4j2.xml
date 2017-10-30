@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Specify the refresh internal in seconds. -->
+<Configuration monitorInterval="60">
+	<Properties>
+        <!-- <Property name="log_base_path">d:/temp</Property> -->
+        <Property name="log_base_path">/home/admin/tomcat</Property>
+        <Property name="log_path">${log_base_path}/logs</Property>
+        <Property name="eventlog_path">${log_base_path}/eventlogs</Property>
+    </Properties>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %p [%C{1}.%M():%L] - %m%n"/>
+        </Console>
+
+        <RollingRandomAccessFile name="devLog" fileName="${log_path}/devLog.log"
+                                 filePattern="${log_path}/devLog-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+        </RollingRandomAccessFile>
+
+        <RollingFile name="thirdPartyAppender" fileName="${log_path}/thirdParty.log" append="true"
+                     filePattern="${log_path}/thirdParty-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%d %p [%C{1}.%M():%L] - %m%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1" />
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+        <RollingFile name="errorAppender" fileName="${log_path}/error.log" append="true"
+                     filePattern="${log_path}/error-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%d %p [%C{1}.%M():%L] - %m%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1" />
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+        <RollingFile name="juranCoreAppender" fileName="${log_path}/juranCore.log" append="true"
+                     filePattern="${log_path}/juranCore-%d{yyyy-MM-dd-HH}-%i.log">
+            <PatternLayout pattern="%d %p [%C{1}.%M():%L] - %m%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1" />
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+        <RollingFile name="juranInfoAppender" fileName="${log_path}/juranInfo.log" append="true"
+                     filePattern="${log_path}/juranInfo-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%d %p [%C{1}.%M():%L] - %m%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1" />
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+        <RollingFile name="juranEventAppender" fileName="${eventlog_path}/juranEvent.log" append="true"
+                     filePattern="${eventlog_path}/juranEvent-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%m%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="50 MB"/>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1" />
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <AsyncLogger  name="org.springframework" level="INFO" additivity="false" includeLocation="true">
+        	<AppenderRef ref="console"/>
+            <AppenderRef ref="thirdPartyAppender"/>
+        </AsyncLogger>
+        <AsyncLogger name="juran.core" level="INFO" additivity="false"  includeLocation="true">
+            <AppenderRef ref="juranCoreAppender"/>
+        </AsyncLogger>
+        <AsyncLogger name="juran.info" level="INFO" additivity="false" includeLocation="true">
+        	<AppenderRef ref="console"/>
+            <AppenderRef ref="juranInfoAppender"/>
+        </AsyncLogger>
+        <AsyncLogger name="juran.event" level="INFO" additivity="false">
+            <AppenderRef ref="juranEventAppender"/>
+        </AsyncLogger>
+
+        <AsyncLogger name="*" level="ERROR" additivity="false">
+            <AppenderRef ref="errorAppender"/>
+        </AsyncLogger>
+
+        <AsyncRoot level="INFO">
+        	<AppenderRef ref="devLog"/>
+            <AppenderRef ref="console"/>
+        </AsyncRoot>
+    </Loggers>
+</Configuration>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"
+       default-lazy-init="true">
+
+    <bean id="configLoader" class="com.juran.index.mdm.app.common.ConfigLoader">
+        <property name="zkAddress" value="52.80.53.175:2181"/>
+        <property name="zkClientTimeout" value="60000"/>
+        <property name="zkConnectTimeout" value="60000"/>
+        <property name="solrpoonum" value="3"/>
+        <property name="minidle" value="10"/>
+        <property name="maxConnections" value="1000"/>
+        <property name="socketTimeout" value="30000"/>
+        <property name="connTimeout" value="30000"/>
+        <property name="maxConnectionsPerHost" value="1000"/>
+        <property name="retry" value="3"/>
+    </bean>
+
+
+
+    <bean id="3DCaseCloudSolrServicePool" class="com.juran.index.mdm.app.pool.BasisCloudSolrServicePool" init-method="initSolrServers">
+        <constructor-arg index="0" value="true"></constructor-arg>
+        <constructor-arg index="1" value="52.80.53.175:2181"></constructor-arg>
+        <constructor-arg index="2" value="Juran_MC_2_3DCase"></constructor-arg>
+    </bean>
+
+
+    <bean id="2DCaseCloudSolrServicePool" class="com.juran.index.mdm.app.pool.BasisCloudSolrServicePool" init-method="initSolrServers">
+        <constructor-arg index="0" value="true"></constructor-arg>
+        <constructor-arg index="1" value="52.80.53.175:2181"></constructor-arg>
+        <constructor-arg index="2" value="Juran_MC_2_2DCase"></constructor-arg>
+    </bean>
+
+
+
+    <bean id="tagCloudSolrServicePool" class="com.juran.index.mdm.app.pool.BasisCloudSolrServicePool" init-method="initSolrServers">
+        <constructor-arg index="0" value="true"></constructor-arg>
+        <constructor-arg index="1" value="52.80.53.175:2181"></constructor-arg>
+        <constructor-arg index="2" value="Juran_MC_2_Tags"></constructor-arg>
+    </bean>
+    
+    <!--<bean id="tagRelationSolrQueryRepo" class="com.yimayhd.solrdump.repo.TagRelationSolrQueryRepo">-->
+       <!--<property name="zkHost" value="${solr.zk.address}"/>-->
+       <!--<property name="collection" value="${tagRelation.collections}"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="lineSolrQueryRepo" class="com.yimayhd.solrdump.repo.LineSolrQueryRepo">-->
+        <!--<property name="zkHost" value="${solr.zk.address}"/>-->
+        <!--<property name="collection" value="${line.collections}"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="topicSolrQueryRepo" class="com.yimayhd.solrdump.repo.TopicSolrQueryRepo">-->
+        <!--<property name="zkHost" value="${solr.zk.address}"/>-->
+        <!--<property name="collection" value="${topic.collections}"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="tagSolrQueryRepo" class="com.yimayhd.solrdump.repo.TagSolrQueryRepo">-->
+        <!--<property name="zkHost" value="${solr.zk.address}"/>-->
+        <!--<property name="collection" value="${tag.collections}"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="regionSolrQueryRepo" class="com.yimayhd.solrdump.repo.RegionSolrQueryRepo">-->
+        <!--<property name="zkHost" value="${solr.zk.address}"/>-->
+        <!--<property name="collection" value="${region.collections}"/>-->
+    <!--</bean>-->
+
+
+
+</beans>

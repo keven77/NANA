@@ -1,0 +1,149 @@
+#必须，无需更改
+server: 
+  port: 8080
+  
+management: 
+  contextPath: /mgmt
+  security: 
+    enabled: false
+
+#必须
+#根据不同环境设置各环境的eureka server的url
+eureka: 
+  instance: 
+    preferIpAddress: true
+#    leaseRenewalIntervalInSeconds: 10 #prod建议删除该配置
+#    leaseExpirationDurationInSeconds: 30 #prod建议删除该配置
+    healthCheckUrlPath: ${management.contextPath}/health
+    metadataMap: 
+      management.context-path: ${management.contextPath}
+  client: 
+    enabled: true
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl: 
+      defaultZone: http://Juran-Alpha-1a-eureka-server-Ubt-1:8080/eureka/,http://Juran-Alpha-1a-eureka-server-Ubt-2:8080/eureka/,http://Juran-Alpha-1a-eureka-server-Ubt-3:8080/eureka/
+
+#exampleuser-app: 
+#  feign: 
+#    url: 54.223.123.229:8080
+
+#必须，无需更改
+feign: 
+  hystrix: 
+    enabled: true
+
+#必须，无需更改    
+hystrix: 
+  command: 
+    default: 
+      execution: 
+        isolation: 
+          thread: 
+            timeoutInMilliseconds: 3000
+
+#必须
+#修改 spring.application.name
+#修改 spring.jersey.jaxrsApplicationClass
+spring: 
+  application: 
+    name: index-mdm-app
+  http: 
+    encoding: 
+      charset: UTF-8
+      force: true
+      forceRequest: true
+      forceResponse: true
+  jersey: 
+    enabled: true
+    urlMappings: /api/*
+    jaxrsApplicationClass: com.juran.index.mdm.app.config.RestJerseyRegister
+
+#必须，无需更改  
+logging:  
+  config: classpath:log4j2.xml
+
+#必须，无需更改    
+eventlog: 
+  component: 设计家平台
+  subSystem: ${spring.application.name}
+  framework: J2EE+SpringCloud
+
+#必须
+#PROD环境及UAT环境需将springfox.config.enabled设为false
+#修改springfox.config.resourcePackage  
+#修改title、contact等信息为自己的
+#访问地址：http:xxx:8080/swagger-ui.html
+springfox: 
+  config:
+    enabled: true
+    configId: index-mdm-swagger2-jersey2
+    title:  索引服务（主数据）-REST服务接口列表
+    version:  1.0.0
+    contact: 暂无联系人
+    schemes: http,https
+    basePath: /api
+    resourcePackage: com.juran.index.mdm.app.resource
+    prettyPrint: true
+    scan: true
+  documentation: 
+    swagger: 
+      v2: 
+        path: /api/swagger.json #/v2/api-docs
+
+
+#solr:
+#  base:
+#    enabled: true
+#    urls: http://54.223.222.84:8080/solr/cas
+    
+#必须
+#修改为自己的数据库地址 
+#根据不同环境修改为各环境的数据库地址       
+mysql:  
+  readWrite: 
+    enabled: true
+    write:    
+      - driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://leedian-ezhome-qa-rds-mysql.cfyuzargym1l.rds.cn-north-1.amazonaws.com.cn:3306/mdmdb2?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+        username: dba
+        password: LeedianRDSMySQLDBA
+        maxActive: 100
+        initialSize: 10  
+    read: 
+      - driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://leedian-ezhome-qa-rds-mysql.cfyuzargym1l.rds.cn-north-1.amazonaws.com.cn:3306/mdmdb2?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+        username: dba
+        password: LeedianRDSMySQLDBA
+        maxActive: 100
+        initialSize: 10
+
+#populateConfigContants 配置:xy
+populateConfigContants:
+#  json文件位置
+  populateJsons:
+    catentry: /populatecata/populateEntry.json
+    catalog: /populatecata/populateCatalog.json
+    brand: /populatecata/populateBrand.json
+
+  solrMap:
+    catentry: Juran_MC_2_CatalogEntry
+    catalog: Juran_MC_2_CatalogGroup
+    brand: Juran_MC_2_Brand
+
+  solrMasterIps:
+    - 54.223.222.84
+
+  solrSalveIps:
+    - 54.223.222.84
+mongodb:
+  base:
+    enabled: true
+    hostPort: 52.80.22.207:27017
+    #hostPort: 172.31.200.125:27017
+    userName: design
+    passWord: design_pwd
+    database: design
+    connectTimeout: 15000  #连接超时
+    socketTimeout: 10000   #执行时间超时
+    serverSelectionTimeout: 15000   #等待应用程序超时

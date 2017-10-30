@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:job="http://www.dangdang.com/schema/ddframe/job"
+       xmlns:reg="http://www.dangdang.com/schema/ddframe/reg"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans.xsd  http://www.dangdang.com/schema/ddframe/reg  http://www.dangdang.com/schema/ddframe/reg/reg.xsd  http://www.dangdang.com/schema/ddframe/job  http://www.dangdang.com/schema/ddframe/job/job.xsd">
+
+
+    <!--配置作业注册中心 -->
+    <reg:zookeeper base-sleep-time-milliseconds="1000" id="populate"
+                   max-retries="3" max-sleep-time-milliseconds="3000"
+                   namespace="elasticjob-job" server-lists="52.80.53.175:2181"/>
+
+    <job:simple id="PopulateJob" class="com.juran.index.mdm.app.utils.job.PopulateJob"
+                registry-center-ref="populate" cron="0 0 6 * * ? " sharding-total-count="1"
+                sharding-item-parameters="0=A" overwrite="true" disabled="true"
+                description="Populate全量索引调度"/>
+
+    <job:simple id="PopulateDeltaJob" class="com.juran.index.mdm.app.utils.job.PopulateDeltaJob"
+                registry-center-ref="populate" cron="0/30 * * * * ? " sharding-total-count="1"
+                sharding-item-parameters="0=A" overwrite="true" disabled="true"
+                description="PopulateCata增量索引调度" />
+
+</beans>
